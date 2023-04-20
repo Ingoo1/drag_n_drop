@@ -63,7 +63,8 @@ function createItemEl(columnEl, column, item, index) {
   listEl.textContent = item;
   listEl.id = index;
   listEl.classList.add('drag-item');
-
+  listEl.draggable = true;
+  listEl.setAttribute('ondragstart', 'drag(event)');
   // Append
   columnEl.appendChild(listEl);
 }
@@ -94,6 +95,33 @@ function updateDOM() {
   onHoldListArray.forEach((onHoldItem, index) => {
     createItemEl(onHoldListEl, 3, onHoldItem, index);
   });
+}
+
+// When Item Enters Column Area
+function dragEnter(column) {
+  listColumns[column].classList.add('over');
+  currentColumn = column;
+}
+
+function drag(e) {
+  draggedItem = e.target;
+}
+
+// Column Allows for Item to Drop
+function allowDrop(e) {
+  e.preventDefault();
+}
+
+// Dropping Item in Column
+function drop(e) {
+  e.preventDefault();
+  const parent = listColumns[currentColumn];
+  // Remove Background Color/Padding
+  listColumns.forEach((column) => {
+    column.classList.remove('over');
+  });
+  // Add item to Column
+  parent.appendChild(draggedItem);
 }
 
 updateDOM();
